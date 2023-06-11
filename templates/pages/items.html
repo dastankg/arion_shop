@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Каталог
+{% endblock %}
+{% block content %}
+    <main>
+        <div class="container">
+            <div class="row py-5">
+                <h2 class="section-title">{{ category.category_name }}</h2>
+                {% for product in products %}
+                    <div class="col-6 col-md-6 col-lg-3">
+                        <a href="{% url 'product_detail' product_id=product.pk %}" class="text-decoration-none">
+                            <div class="card catalog-item shadow">
+                                <div class="square-container">
+                                    <img class="square-img card-img-top rounded" src="{{ product.return_photo.first.image.url }}">
+                                </div>
+                            </div>
+                            <h5 class="item-desc mt-3">{{ product.name }}</h5>
+                        </a>
+                        <h3 class="item-price interfamily">{{ product.price }} сом/шт</h3>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row pb-5 pt-3">
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item{% if not products.has_previous %} disabled{% endif %}">
+                            {% if products.has_previous %}
+                                <a class="page-link" href="?page={{ products.previous_page_number }}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&lt;</span>
+                                </a>
+                            {% else %}
+                                <span class="page-link" aria-hidden="true">&lt;</span>
+                            {% endif %}
+                        </li>
+                        {% for page in display_pages %}
+                            {% if page == products.number %}
+                                <li class="page-item"><a class="page-link active" href="#">{{ page }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li class="page-item{% if not products.has_next %} disabled{% endif %}">
+                            {% if products.has_next %}
+                                <a class="page-link" href="?page={{ products.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&gt;</span>
+                                </a>
+                            {% else %}
+                                <span class="page-link" aria-hidden="true">&gt;</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </main>
+{% endblock %}

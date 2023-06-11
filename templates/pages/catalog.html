@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Каталог
+{% endblock %}
+{% block content %}
+    <main>
+        <div class="container">
+            <div class="row py-5">
+                <h2 class="section-title">Каталог</h2>
+                {% for category in categories %}
+                    <div class="col-6 col-md-6 col-lg-3">
+                        <a href="{% url 'category_products' category_id=category.pk %}"
+                           class="card catalog-item shadow p-4 p-md-2 pb-0">
+                            <div class="square-container">
+                                <img class="square-img card-img-top rounded"
+                                     src="{{ category.photo.url }}?page={{ categories.number }}&total_pages={{ categories.paginator.num_pages }}">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ category.category_name }}</h5>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row pb-5 pt-3">
+
+                <!-- Вывод пагинации -->
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item{% if not categories.has_previous %} disabled{% endif %}">
+                            {% if categories.has_previous %}
+                                <a class="page-link" href="?page={{ categories.previous_page_number }}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&lt;</span>
+                                </a>
+                            {% else %}
+                                <span class="page-link" aria-hidden="true">&lt;</span>
+                            {% endif %}
+                        </li>
+                        {% for page in display_pages %}
+                            {% if page == categories.number %}
+                                <li class="page-item"><a class="page-link active" href="#">{{ page }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li class="page-item{% if not categories.has_next %} disabled{% endif %}">
+                            {% if categories.has_next %}
+                                <a class="page-link" href="?page={{ categories.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&gt;</span>
+                                </a>
+                            {% else %}
+                                <span class="page-link" aria-hidden="true">&gt;</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </nav>
+
+
+            </div>
+        </div>
+    </main>
+{% endblock %}

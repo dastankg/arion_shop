@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    О компании
+{% endblock %}
+{% block content %}
+<main>
+	<div class="container pt-5">
+		<div class="row">
+			<div class="col-12 col-lg-6 pb-4">
+				<div class="product-gallery">
+					<div class="product-image rounded">
+						<img class="active rounded" src="{{ product.return_photo.first.image.url }}">
+					</div>
+                    <ul class="image-list">
+                        {% for photo in product.return_photo %}
+                            <li class="image-item"><img class="rounded" src="{{ photo.image.url }}"></li>
+                        {% endfor %}
+					</ul>
+				</div>
+			</div>
+			<div class="col-12 col-lg-6">
+				<h2 class="product-title">{{ product.name }}</h2>
+                <ul class="product-specs">
+                    {% for characteristic in product.return_characteristics %}
+                        <li><b>{{ characteristic.name }}:</b> {{ characteristic.value }}</li>
+                    {% endfor %}
+				</ul>
+				<div class="single-page-price pt-4">
+					<h3 class="item-price interfamily">{{ product.price }} сом/шт</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row py-5">
+			<h2 class="section-title">Описание и характеристики</h2>
+			<hr class="mb-5">
+			<div class="col-12 col-md-7 ">
+				<p class="fs-5"><b>{{ product.name }}</b><br>
+					<br>
+					{{ product.description }}</p>
+			</div>
+			<div class="col-12 col-md-5">
+				<ul class="product-specs">
+					{% for characteristic in product.return_characteristics %}
+                        <li><b>{{ characteristic.name }}:</b> {{ characteristic.value }}</li>
+                    {% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+{% if similar_products.exists %}
+    <div class="container">
+        <div class="row py-5 mb-5">
+            <h2 class="section-title">Похожие товары</h2>
+            {% for similar_product in similar_products %}
+                <div class="col-6 col-md-6 col-lg-3">
+                    <a href="{% url 'product_detail' product_id=similar_product.pk %}" class="text-decoration-none">
+                        <div class="card catalog-item shadow">
+                            <div class="square-container">
+                                <img class="square-img card-img-top rounded" src="{{ similar_product.return_photo.first.image.url }}">
+                            </div>
+                        </div>
+                        <h5 class="item-desc mt-3">{{ similar_product.name }}</h5>
+                    </a>
+                    <h3 class="item-price interfamily">{{ similar_product.price }} сом/шт</h3>
+                </div>
+            {% endfor %}
+		</div>
+	</div>
+{% endif %}
+
+</main>
+
+<script !src="">
+  const activeImage = document.querySelector(".product-image .active");
+  const productImages = document.querySelectorAll(".image-list img");
+  const navItem = document.querySelector('a.toggle-nav');
+
+  function changeImage(e) {
+    activeImage.src = e.target.src;
+  }
+
+  function toggleNavigation(){
+    this.nextElementSibling.classList.toggle('active');
+  }
+
+  productImages.forEach(image => image.addEventListener("click", changeImage));
+  navItem.addEventListener('click', toggleNavigation);
+</script>
+{% endblock %}
